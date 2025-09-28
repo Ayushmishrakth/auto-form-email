@@ -18,3 +18,4 @@ Automates Google Form submissions, logs responses in Google Sheets, and sends co
 2. Run Python email script if needed
 3. Submit Google Form to test
 # auto-form-email
+# auto-form-email
