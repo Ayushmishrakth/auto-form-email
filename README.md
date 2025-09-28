@@ -91,6 +91,4 @@ References
 - Google Forms & Sheets Integration: https://support.google.com/docs/answer/6281888
 """
 
-# Write to README.txt
-with open("README.txt", "w", encoding="utf-8") as file:
-    file.write(readme_content)
+

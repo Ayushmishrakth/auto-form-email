@@ -1,0 +1,58 @@
+{
+  "name": "Google Form Auto Email",
+  "nodes": [
+    {
+      "parameters": {
+        "sheetId": "<YOUR_GOOGLE_SHEET_ID>",
+        "range": "Sheet1",
+        "watchFor": "new"
+      },
+      "name": "Watch Google Sheet",
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const email = $node[\"Watch Google Sheet\"].json[\"Email\"];\nreturn [{ json: { email } }];"
+      },
+      "name": "Get Email",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const exec = require('child_process').exec;\nconst email = $json[\"email\"];\nexec(`python send_email.py --recipient ${email}`, (err, stdout, stderr) => {\n  if(err){ console.error(err); }\n  else{ console.log(stdout); }\n});\nreturn [{ json: { status: 'Email sent', to: email } }];"
+      },
+      "name": "Send Email Script",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [750, 300]
+    }
+  ],
+  "connections": {
+    "Watch Google Sheet": {
+      "main": [
+        [
+          {
+            "node": "Get Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Email": {
+      "main": [
+        [
+          {
+            "node": "Send Email Script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
